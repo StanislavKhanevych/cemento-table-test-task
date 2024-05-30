@@ -31,7 +31,9 @@ const StatusCell = ({ getValue, row, column, table }) => {
       <MenuList bg={'gray.900'}>
         <MenuItem
           bg={'gray.900'}
-          onClick={() => updateData(row.index, column.id, null)}
+          onClick={() =>
+            updateData(row.getParentRow()?.index, column.id, null, row.index)
+          }
         >
           <StatusColorIcon color={'red.400'} mr="5px" />
           None
@@ -42,7 +44,12 @@ const StatusCell = ({ getValue, row, column, table }) => {
               bg={'gray.900'}
               key={status.id}
               onClick={() => {
-                updateData(row.index, column.id, status);
+                updateData(
+                  row.getParentRow()?.index,
+                  column.id,
+                  status,
+                  row.index
+                );
               }}
             >
               <StatusColorIcon color={status.color} mr="5px" />

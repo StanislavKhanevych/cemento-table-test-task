@@ -1,5 +1,5 @@
-import { Input } from '@chakra-ui/react';
-import { useState, useEffect } from 'react';
+import { HStack, Input, Button } from '@chakra-ui/react';
+import React, { useState, useEffect } from 'react';
 
 const EditableCell = ({ getValue, row, column, table }) => {
   const initialValue = getValue();
@@ -7,7 +7,7 @@ const EditableCell = ({ getValue, row, column, table }) => {
   const { updateData } = table.options.meta || {};
 
   const onBlur = () => {
-    updateData(row.index, column.id, value);
+    updateData(row.getParentRow()?.index, column.id, value, row.index);
   };
 
   useEffect(() => {
@@ -15,17 +15,29 @@ const EditableCell = ({ getValue, row, column, table }) => {
   }, [initialValue]);
 
   return (
-    <Input
-      value={value}
-      onChange={(e) => setValue(e.target.value)}
-      onBlur={onBlur}
-      variant="filled"
-      size="sm"
-      w="85%"
-      overflow="hidden"
-      textOverflow="ellipsis"
-      whiteSpace="nowrap"
-    />
+    <HStack>
+      {row.getCanExpand() && column.id === 'firstName' ? (
+        <Button
+          size="sm"
+          bg="transparent"
+          onClick={row.getToggleExpandedHandler()}
+        >
+          {row.getIsExpanded() ? '👇' : '👉'}
+        </Button>
+      ) : null}{' '}
+      <Input
+        value={value}
+        onChange={(e) => setValue(e.target.value)}
+        onBlur={onBlur}
+        variant="filled"
+        size="sm"
+        w="85%"
+        bg="transparent"
+        overflow="hidden"
+        textOverflow="ellipsis"
+        whiteSpace="nowrap"
+      />
+    </HStack>
   );
 };
 export default EditableCell;

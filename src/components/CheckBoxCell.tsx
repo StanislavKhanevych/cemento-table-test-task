@@ -9,7 +9,7 @@ const CheckboxCell = ({ getValue, row, column, table }) => {
   const onChange = () => {
     const newValue = !value;
     setValue(newValue);
-    updateData(row.index, column.id, newValue);
+    updateData(row.getParentRow()?.index, column.id, newValue, row.index);
   };
 
   return (

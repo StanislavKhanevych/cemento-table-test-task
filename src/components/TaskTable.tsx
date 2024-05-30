@@ -7,6 +7,7 @@ import {
   getFilteredRowModel,
   getPaginationRowModel,
   getSortedRowModel,
+  getExpandedRowModel,
   useReactTable,
 } from '@tanstack/react-table';
 import { makeData } from '../mockedData';
@@ -60,11 +61,13 @@ const defaultColumns = [
     filterFunction: 'includesString',
   },
 ];
+
 const TableTask = () => {
   const [data, setData] = useState([]);
   const [columnFilters, setColumnFilters] = useState([]);
   const [columnVisibility, setColumnVisibility] = useState({});
   const [columns] = useState<typeof defaultColumns>(() => [...defaultColumns]);
+  const [expanded, setExpanded] = useState<ExpandedState>({});
   const LOCAL_STORAGE_KEY = 'tableData';
 
   useEffect(() => {
@@ -76,7 +79,7 @@ const TableTask = () => {
         console.error('Error parsing stored data:', error);
       }
     } else {
-      setData(makeData(100));
+      setData(makeData(100, 3));
     }
   }, []);
 
@@ -90,9 +93,13 @@ const TableTask = () => {
     data,
     columns,
     state: {
+      expanded,
       columnFilters,
       columnVisibility,
     },
+    onExpandedChange: setExpanded,
+    getSubRows: (row) => row?.subRows,
+    getExpandedRowModel: getExpandedRowModel(),
     onColumnVisibilityChange: setColumnVisibility,
     getCoreRowModel: getCoreRowModel(),
     getFilteredRowModel: getFilteredRowModel(),
@@ -104,14 +111,27 @@ const TableTask = () => {
     debugHeaders: true,
     debugColumns: true,
     meta: {
-      updateData: (rowIndex, columnId, value) =>
+      updateData: (parentRowIndex, columnId, value, rowIndex) =>
         setData((prevData) =>
-          prevData.map((row, i) =>
-            i === rowIndex ? { ...row, [columnId]: value } : row
-          )
+          prevData.map((row, i) => {
+            if (parentRowIndex === undefined) {
+              return i === rowIndex ? { ...row, [columnId]: value } : row;
+            } else {
+              return i === parentRowIndex
+                ? {
+                    ...row,
+                    subRows: row.subRows.map((subRow, j) =>
+                      j === rowIndex ? { ...subRow, [columnId]: value } : subRow
+                    ),
+                  }
+                : row;
+            }
+          })
         ),
     },
   });
+
+  console.log('data', data);
 
   return (
     <Box>

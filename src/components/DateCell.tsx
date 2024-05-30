@@ -37,10 +37,14 @@ const DateCell = ({ getValue, row, column, table }) => {
       wrapperClassName="date-wrapper"
       dateFormat="MMM d"
       selected={date}
-      onChange={(date) => updateData(row.index, column.id, date)}
+      onChange={(date) =>
+        updateData(row.getParentRow()?.index, column.id, date, row.index)
+      }
       customInput={
         <DateCustomInput
-          clearDate={() => updateData(row.index, column.id, null)}
+          clearDate={() =>
+            updateData(row.getParentRow()?.index, column.id, null, row.index)
+          }
         />
       }
     />
