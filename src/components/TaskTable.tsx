@@ -1,6 +1,6 @@
 import React from 'react';
-import { useState } from 'react';
-import { Box, ButtonGroup, Icon, Text, Button } from '@chakra-ui/react';
+import { useState, useEffect } from 'react';
+import { Box, ButtonGroup, Icon, Text, Button, Flex } from '@chakra-ui/react';
 import {
   flexRender,
   getCoreRowModel,
@@ -9,15 +9,16 @@ import {
   getSortedRowModel,
   useReactTable,
 } from '@tanstack/react-table';
-import { makeData, Person } from '../mockedData';
+import { makeData } from '../mockedData';
 import EditableCell from './EditableCell';
 import StatusCell from './StatusCell';
 import DateCell from './DateCell';
 import CheckboxCell from './CheckBoxCell';
 import Filters from './Filters';
 import SortIcon from '../icons/SortIcon';
+import ColumsHandler from './ColumsHandler';
 
-const columns = [
+const defaultColumns = [
   {
     accessorKey: 'firstName',
     header: 'First Name',
@@ -60,19 +61,47 @@ const columns = [
   },
 ];
 const TableTask = () => {
-  const [data, setData] = React.useState(() => makeData(100));
+  const [data, setData] = useState([]);
   const [columnFilters, setColumnFilters] = useState([]);
+  const [columnVisibility, setColumnVisibility] = useState({});
+  const [columns] = useState<typeof defaultColumns>(() => [...defaultColumns]);
+  const LOCAL_STORAGE_KEY = 'tableData';
+
+  useEffect(() => {
+    const storedData = localStorage.getItem(LOCAL_STORAGE_KEY);
+    if (storedData !== null) {
+      try {
+        setData(JSON.parse(storedData));
+      } catch (error) {
+        console.error('Error parsing stored data:', error);
+      }
+    } else {
+      setData(makeData(100));
+    }
+  }, []);
+
+  useEffect(() => {
+    if (data.length) {
+      localStorage.setItem(LOCAL_STORAGE_KEY, JSON.stringify(data));
+    }
+  }, [data]);
+
   const table = useReactTable({
     data,
     columns,
     state: {
       columnFilters,
+      columnVisibility,
     },
+    onColumnVisibilityChange: setColumnVisibility,
     getCoreRowModel: getCoreRowModel(),
     getFilteredRowModel: getFilteredRowModel(),
     getSortedRowModel: getSortedRowModel(),
     getPaginationRowModel: getPaginationRowModel(),
     columnResizeMode: 'onChange',
+    debugTable: true,
+    debugHeaders: true,
+    debugColumns: true,
     meta: {
       updateData: (rowIndex, columnId, value) =>
         setData((prevData) =>
@@ -85,10 +114,13 @@ const TableTask = () => {
 
   return (
     <Box>
-      <Filters
-        columnFilters={columnFilters}
-        setColumnFilters={setColumnFilters}
-      />
+      <Flex>
+        <Filters
+          columnFilters={columnFilters}
+          setColumnFilters={setColumnFilters}
+        />
+        <ColumsHandler table={table} />
+      </Flex>
       <Box className="table" width={table.getTotalSize()}>
         {table?.getHeaderGroups().map((headerGroup) => (
           <Box className="tr" key={headerGroup.id}>

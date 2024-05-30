@@ -6,13 +6,15 @@ const CheckboxCell = ({ getValue, row, column, table }) => {
   const initialValue = getValue();
   const [value, setValue] = useState(initialValue);
 
-  useEffect(() => {
-    updateData(row.index, column.id, value);
-  }, [value]);
+  const onChange = () => {
+    const newValue = !value;
+    setValue(newValue);
+    updateData(row.index, column.id, newValue);
+  };
 
   return (
     <Center w="100%" h="100%">
-      <Checkbox isChecked={value} onChange={() => setValue(!value)} />
+      <Checkbox isChecked={value} onChange={onChange} />
     </Center>
   );
 };
