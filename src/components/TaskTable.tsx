@@ -98,6 +98,7 @@ const TableTask = () => {
     getFilteredRowModel: getFilteredRowModel(),
     getSortedRowModel: getSortedRowModel(),
     getPaginationRowModel: getPaginationRowModel(),
+    autoResetPageIndex: false,
     columnResizeMode: 'onChange',
     debugTable: true,
     debugHeaders: true,
