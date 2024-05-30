@@ -3,6 +3,7 @@ import { Box, Center, Icon } from '@chakra-ui/react';
 import DatePicker from 'react-datepicker';
 import 'react-datepicker/dist/react-datepicker.css';
 import CalendarIcon from '../icons/CalendarIcon';
+import React from 'react';
 
 const DateCustomInput = forwardRef(({ value, onClick, clearDate }, ref) => (
   <Center ref={ref} onClick={onClick} cursor="pointer">

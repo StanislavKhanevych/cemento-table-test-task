@@ -1,4 +1,5 @@
 import { Menu, MenuButton, MenuList, MenuItem, Box } from '@chakra-ui/react';
+import React from 'react';
 import { STATUSES } from '../mockedData';
 
 export const StatusColorIcon = ({ color, ...props }) => (
@@ -8,7 +9,7 @@ export const StatusColorIcon = ({ color, ...props }) => (
 const StatusCell = ({ getValue, row, column, table }) => {
   const { name, color } = getValue() || {};
   const { updateData } = table.options.meta || {};
-  console.log('getValue, row, column, table', getValue, row, column, table);
+
   return (
     <Menu
       bg={'gray.900'}

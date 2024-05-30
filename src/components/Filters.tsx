@@ -1,5 +1,4 @@
 import {
-  Box,
   HStack,
   Icon,
   Input,
@@ -11,7 +10,7 @@ import SearchIcon from '../icons/SearchIcon';
 import FilterPopover from './FilterPopover';
 
 const Filters = ({ columnFilters, setColumnFilters }) => {
-  const taskName = columnFilters.find((f) => f.id === 'task')?.value || '';
+  const name = columnFilters.find((f) => f.id === 'firstName')?.value || '';
   const onFilterChange = (id, value) =>
     setColumnFilters((prev) =>
       prev
@@ -28,12 +27,12 @@ const Filters = ({ columnFilters, setColumnFilters }) => {
           <Icon as={SearchIcon} />
         </InputLeftElement>
         <Input
-          value={taskName}
+          value={name}
           placeholder="Search"
           type="text"
           variant="filled"
           borderRadius={5}
-          onChange={(e) => onFilterChange('task', e.target.value)}
+          onChange={(e) => onFilterChange('firstName', e.target.value)}
         />
       </InputGroup>
       <FilterPopover

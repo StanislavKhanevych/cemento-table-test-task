@@ -9,21 +9,35 @@ import {
   getSortedRowModel,
   useReactTable,
 } from '@tanstack/react-table';
-import DATA from '../mockedData';
+import { makeData, Person } from '../mockedData';
 import EditableCell from './EditableCell';
 import StatusCell from './StatusCell';
 import DateCell from './DateCell';
+import CheckboxCell from './CheckBoxCell';
 import Filters from './Filters';
 import SortIcon from '../icons/SortIcon';
 
 const columns = [
   {
-    accessorKey: 'task',
-    header: 'Task',
+    accessorKey: 'firstName',
+    header: 'First Name',
     size: 255,
     cell: EditableCell,
     enableColumnFilter: true,
     filterFunction: 'includesString',
+  },
+  {
+    accessorKey: 'lastName',
+    header: 'Last Name',
+    size: 255,
+    cell: EditableCell,
+    enableColumnFilter: true,
+    filterFunction: 'includesString',
+  },
+  {
+    accessorKey: 'due',
+    header: 'Date of Birth',
+    cell: DateCell,
   },
   {
     accessorKey: 'status',
@@ -38,21 +52,15 @@ const columns = [
     },
   },
   {
-    accessorKey: 'due',
-    header: 'Due',
-    cell: DateCell,
-  },
-  {
-    accessorKey: 'notes',
-    header: 'Notes',
-    size: 255,
-    cell: EditableCell,
+    accessorKey: 'applied',
+    header: 'Applied',
+    cell: CheckboxCell,
     enableColumnFilter: true,
     filterFunction: 'includesString',
   },
 ];
 const TableTask = () => {
-  const [data, setData] = useState(DATA);
+  const [data, setData] = React.useState(() => makeData(100));
   const [columnFilters, setColumnFilters] = useState([]);
   const table = useReactTable({
     data,
