@@ -15,6 +15,7 @@ import EditableCell from './EditableCell';
 import StatusCell from './StatusCell';
 import DateCell from './DateCell';
 import CheckboxCell from './CheckBoxCell';
+import ComputedCell from './ComputedCell';
 import Filters from './Filters';
 import SortIcon from '../icons/SortIcon';
 import ColumsHandler from './ColumsHandler';
@@ -60,6 +61,22 @@ const defaultColumns = [
     enableColumnFilter: true,
     filterFunction: 'includesString',
   },
+  {
+    accessorKey: 'visits',
+    header: 'Visits',
+    size: 255,
+    cell: ComputedCell,
+    enableColumnFilter: true,
+    filterFunction: 'includesString',
+  },
+  {
+    accessorKey: 'salary',
+    header: 'Salary ($)',
+    size: 255,
+    cell: ComputedCell,
+    enableColumnFilter: true,
+    filterFunction: 'includesString',
+  },
 ];
 
 const TableTask = () => {
@@ -67,7 +84,7 @@ const TableTask = () => {
   const [columnFilters, setColumnFilters] = useState([]);
   const [columnVisibility, setColumnVisibility] = useState({});
   const [columns] = useState<typeof defaultColumns>(() => [...defaultColumns]);
-  const [expanded, setExpanded] = useState<ExpandedState>({});
+  const [expanded, setExpanded] = useState({});
   const LOCAL_STORAGE_KEY = 'tableData';
 
   useEffect(() => {
@@ -79,7 +96,7 @@ const TableTask = () => {
         console.error('Error parsing stored data:', error);
       }
     } else {
-      setData(makeData(100, 3));
+      setData(makeData(2000, 3));
     }
   }, []);
 

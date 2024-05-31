@@ -43,7 +43,7 @@ const newPerson = (): any => {
     lastName: faker.person.lastName(),
     due: faker.date.past(),
     visits: faker.number.int(1000),
-    price: faker.number.int(1000),
+    salary: faker.number.int(1000),
     applied: faker.datatype.boolean(),
     status: faker.helpers.shuffle<Person['status']>([
       STATUS_RELATIONSHIP,
