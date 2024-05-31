@@ -39,6 +39,7 @@ const range = (len: number) => {
 
 const newPerson = (): any => {
   return {
+    id: faker.string.uuid(),
     firstName: faker.person.firstName(),
     lastName: faker.person.lastName(),
     due: faker.date.past(),
