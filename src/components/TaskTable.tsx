@@ -10,7 +10,7 @@ import {
   getExpandedRowModel,
   useReactTable,
 } from '@tanstack/react-table';
-import { makeData } from '../mockedData';
+import { makeData, defaultColumns } from '../mockedData';
 import EditableCell from './EditableCell';
 import StatusCell from './StatusCell';
 import DateCell from './DateCell';
@@ -20,70 +20,41 @@ import Filters from './Filters';
 import SortIcon from '../icons/SortIcon';
 import ColumsHandler from './ColumsHandler';
 
-const defaultColumns = [
-  {
-    accessorKey: 'firstName',
-    header: 'First Name',
-    size: 255,
-    cell: EditableCell,
-    enableColumnFilter: true,
-    filterFunction: 'includesString',
-  },
-  {
-    accessorKey: 'lastName',
-    header: 'Last Name',
-    size: 255,
-    cell: EditableCell,
-    enableColumnFilter: true,
-    filterFunction: 'includesString',
-  },
-  {
-    accessorKey: 'due',
-    header: 'Date of Birth',
-    cell: DateCell,
-  },
-  {
-    accessorKey: 'status',
-    header: 'Status',
-    cell: StatusCell,
-    enableColumnFilter: true,
-    enableSorting: false,
-    filterFn: (row, columnId, filterStatuses) => {
-      if (!filterStatuses.length) return true;
-      const status = row.getValue(columnId);
-      return filterStatuses.includes(status?.id);
-    },
-  },
-  {
-    accessorKey: 'applied',
-    header: 'Applied',
-    cell: CheckboxCell,
-    enableColumnFilter: true,
-    filterFunction: 'includesString',
-  },
-  {
-    accessorKey: 'visits',
-    header: 'Visits',
-    size: 255,
-    cell: ComputedCell,
-    enableColumnFilter: true,
-    filterFunction: 'includesString',
-  },
-  {
-    accessorKey: 'salary',
-    header: 'Salary ($)',
-    size: 255,
-    cell: ComputedCell,
-    enableColumnFilter: true,
-    filterFunction: 'includesString',
-  },
-];
+const cellMap = {
+  string: EditableCell,
+  boolean: CheckboxCell,
+  date: DateCell,
+  array: StatusCell,
+  number: ComputedCell,
+};
+
+const formattedColumns = defaultColumns
+  .sort((a, b) => a.ordinalNo - b.ordinalNo)
+  .map((column) => {
+    return {
+      accessorKey: column.id,
+      header: column.title,
+      size: column?.width || 150,
+      cell: cellMap[column.type],
+      enableColumnFilter: column.type !== 'boolean',
+      filterFn:
+        column.type !== 'array'
+          ? 'includesString'
+          : (row, columnId, filterStatuses) => {
+              if (!filterStatuses.length) return true;
+              const status = row.getValue(columnId);
+              return filterStatuses.includes(status?.id);
+            },
+    };
+  });
 
 const TableTask = () => {
   const [data, setData] = useState([]);
   const [columnFilters, setColumnFilters] = useState([]);
   const [columnVisibility, setColumnVisibility] = useState({});
-  const [columns] = useState<typeof defaultColumns>(() => [...defaultColumns]);
+  const [columns] = useState<typeof formattedColumns>(() => [
+    ...formattedColumns,
+  ]);
   const [expanded, setExpanded] = useState({});
   const LOCAL_STORAGE_KEY = 'tableData';
 
@@ -147,8 +118,6 @@ const TableTask = () => {
         ),
     },
   });
-
-  console.log('data', data);
 
   return (
     <Box>

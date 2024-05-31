@@ -66,3 +66,52 @@ export function makeData(...lens: number[]) {
 
   return makeDataLevel();
 }
+
+export const defaultColumns = [
+  {
+    id: 'status',
+    title: 'Status',
+    ordinalNo: 3,
+    type: 'array',
+  },
+  {
+    id: 'firstName',
+    title: 'First Name',
+    ordinalNo: 0,
+    width: 255,
+    type: 'string',
+  },
+  {
+    id: 'due',
+    title: 'Date of Birth',
+    ordinalNo: 2,
+    type: 'date',
+  },
+  {
+    id: 'salary',
+    title: 'Salary ($)',
+    ordinalNo: 6,
+    width: 255,
+    type: 'number',
+  },
+  {
+    id: 'lastName',
+    title: 'Last Name',
+    ordinalNo: 1,
+    width: 255,
+    type: 'string',
+  },
+  {
+    id: 'applied',
+    title: 'Applied',
+    ordinalNo: 4,
+    type: 'boolean',
+  },
+  {
+    id: 'visits',
+    title: 'Visits',
+    ordinalNo: 5,
+    width: 255,
+    type: 'number',
+  },
+];
